@@ -6,12 +6,10 @@ import java.util.List;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
 import de.lugawe.gmf.controller.json.JsonArchiveAsset;
 import de.lugawe.gmf.controller.json.JsonAsset;
 import de.lugawe.gmf.controller.json.JsonRelease;
-import de.lugawe.gmf.controller.util.ContentTypeUtils;
 
 @Path("/repos")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -49,15 +47,12 @@ public class RepoController {
 
     @GET
     @Path("/{repository}/releases/{tagName}/assets/{assetName}/content")
-    public Response getAssetContent(
+    public InputStream getAssetContent(
             @PathParam("repository") String repository,
             @PathParam("tagName") String tagName,
             @PathParam("assetName") String assetName) {
 
-        InputStream inputStream = repoControllerService.getAssetContent(repository, tagName, assetName);
-        String contentType = ContentTypeUtils.getContentType(assetName);
-
-        return Response.ok(inputStream).type(contentType).build();
+        return repoControllerService.getAssetContent(repository, tagName, assetName);
     }
 
     @GET
@@ -72,15 +67,12 @@ public class RepoController {
 
     @GET
     @Path("/{repository}/releases/{tagName}/assets/{assetName}/archive/{path: .+}")
-    public Response getArchiveAssetContent(
+    public InputStream getArchiveAssetContent(
             @PathParam("repository") String repository,
             @PathParam("tagName") String tagName,
             @PathParam("assetName") String assetName,
             @PathParam("path") String path) {
 
-        InputStream inputStream = repoControllerService.getArchiveAssetContent(repository, tagName, assetName, path);
-        String contentType = ContentTypeUtils.getContentType(path);
-
-        return Response.ok(inputStream).type(contentType).build();
+        return repoControllerService.getArchiveAssetContent(repository, tagName, assetName, path);
     }
 }
