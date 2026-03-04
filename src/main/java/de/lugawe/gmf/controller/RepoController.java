@@ -47,6 +47,7 @@ public class RepoController {
 
     @GET
     @Path("/{repository}/releases/{tagName}/assets/{assetName}/content")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public InputStream getAssetContent(
             @PathParam("repository") String repository,
             @PathParam("tagName") String tagName,
@@ -67,6 +68,7 @@ public class RepoController {
 
     @GET
     @Path("/{repository}/releases/{tagName}/assets/{assetName}/archive/{path: .+}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public InputStream getArchiveAssetContent(
             @PathParam("repository") String repository,
             @PathParam("tagName") String tagName,
