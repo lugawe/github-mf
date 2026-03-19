@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -33,7 +34,7 @@ public class ClientGitHubService implements GitHubService {
     private static final Logger log = LoggerFactory.getLogger(ClientGitHubService.class);
 
     @ConfigProperty(name = "gmf.github-token")
-    private String gitHubToken;
+    private Optional<String> gitHubToken;
 
     @Inject
     private ArchiveService archiveService;
@@ -44,9 +45,15 @@ public class ClientGitHubService implements GitHubService {
 
     @PostConstruct
     public void initialize() {
-        log.info("Initializing GitHub client.");
         try {
-            this.gitHub = new GitHubBuilder().withOAuthToken(gitHubToken).build();
+            if (gitHubToken.isPresent()) {
+                log.info("Initializing GitHub client with OAuth token.");
+                this.gitHub =
+                        new GitHubBuilder().withOAuthToken(gitHubToken.get()).build();
+            } else {
+                log.info("Initializing GitHub client.");
+                this.gitHub = new GitHubBuilder().build();
+            }
         } catch (IOException e) {
             throw new GMFException("Could not build GitHub client.", e);
         }
