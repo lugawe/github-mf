@@ -13,7 +13,7 @@ env:
   PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
-  build-push-image:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
