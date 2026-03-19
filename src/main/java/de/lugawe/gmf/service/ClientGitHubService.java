@@ -84,7 +84,10 @@ public class ClientGitHubService implements GitHubService {
         log.info("Loading asset content from '{}'.", url);
         try {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("Authorization", "Bearer " + gitHubToken);
+            if (gitHubToken.isPresent()) {
+                log.debug("Using Bearer token to retrieve asset content.");
+                connection.setRequestProperty("Authorization", "Bearer " + gitHubToken.get());
+            }
             connection.setRequestProperty("Accept", "application/octet-stream");
             connection.setInstanceFollowRedirects(true);
             try (InputStream inputStream = connection.getInputStream()) {
